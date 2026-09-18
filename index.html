@@ -1,285 +1,243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GreenWave | Smart Traffic Management</title>
+    <title>For My Daddy ❤️</title>
 
     <style>
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f4fff7;
-            color: #183b2a;
-        }
-
-        header {
-            background: #0b5d3b;
-            color: white;
-            padding: 18px 8%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: bold;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 25px;
-            font-size: 15px;
-        }
-
-        nav a:hover {
-            color: #8cffb5;
-        }
-
-        .hero {
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 60px 8%;
-            gap: 40px;
-        }
-
-        .hero-text {
-            max-width: 600px;
-        }
-
-        .hero h1 {
-            font-size: 55px;
-            color: #087443;
-            margin-bottom: 15px;
-        }
-
-        .hero h2 {
-            font-size: 25px;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: 18px;
-            line-height: 1.7;
-            color: #527061;
-        }
-
-        .button {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 13px 25px;
-            background: #0b8f50;
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-        }
-
-        .button:hover {
-            background: #066b3b;
-        }
-
-        .traffic-icon {
-            width: 180px;
-            height: 300px;
-            background: #1c2722;
-            border-radius: 30px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-
-        .light {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            background: #333;
-        }
-
-        .red {
-            background: #ff3838;
-        }
-
-        .yellow {
-            background: #ffd43b;
-        }
-
-        .green {
-            background: #25d366;
-            box-shadow: 0 0 25px #25d366;
-        }
-
-        section {
-            padding: 70px 8%;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 34px;
-            color: #087443;
-            margin-bottom: 40px;
-        }
-
-        .dashboard {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-
-        .roads {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .road {
-            background: #effaf3;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .road h3 {
-            margin-bottom: 15px;
-        }
-
-        .vehicle-count {
-            font-size: 38px;
-            font-weight: bold;
-            color: #087443;
-        }
-
-        .status {
-            margin-top: 10px;
-            padding: 8px;
-            border-radius: 20px;
-            background: #d8f8e5;
-            color: #087443;
-            font-weight: bold;
-        }
-
-        .timer {
-            text-align: center;
-            margin-top: 35px;
-            padding: 25px;
-            background: #0b5d3b;
-            color: white;
-            border-radius: 15px;
-        }
-
-        .timer-number {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 10px;
-        }
-
-        .decision {
-            margin-top: 25px;
-            padding: 18px;
-            background: #e4f8ec;
-            border-left: 5px solid #0b8f50;
-            border-radius: 8px;
-            font-size: 17px;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
-        }
-
-        .card .icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-            color: #087443;
-        }
-
-        .how {
-            background: #e9f9ef;
-        }
-
-        .steps {
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, #ffffffaa 0 3px, transparent 4px),
+                radial-gradient(circle at 80% 30%, #ffffff99 0 4px, transparent 5px),
+                linear-gradient(135deg, #ffb6d5, #d8c2ff, #bde7ff);
+            background-size: 120px 120px, 160px 160px, 100% 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
         }
 
-        .step {
-            background: white;
+        /* Floating hearts */
+        .heart {
+            position: absolute;
+            font-size: 25px;
+            animation: float 7s linear infinite;
+            opacity: 0.7;
+        }
+
+        .h1 { left: 8%; animation-delay: 0s; }
+        .h2 { left: 22%; animation-delay: 2s; }
+        .h3 { left: 75%; animation-delay: 1s; }
+        .h4 { left: 90%; animation-delay: 4s; }
+        .h5 { left: 55%; animation-delay: 3s; }
+
+        @keyframes float {
+            0% {
+                bottom: -50px;
+                transform: rotate(0deg) scale(0.8);
+            }
+
+            50% {
+                transform: rotate(15deg) scale(1.1);
+            }
+
+            100% {
+                bottom: 110%;
+                transform: rotate(-15deg) scale(0.9);
+            }
+        }
+
+        /* Main card */
+        .card {
+            position: relative;
+            width: 340px;
+            max-width: 90%;
+            padding: 35px 25px;
+            text-align: center;
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(12px);
+            border-radius: 35px;
+            border: 2px solid rgba(255,255,255,0.9);
+            box-shadow:
+                0 20px 50px rgba(100,50,100,0.25),
+                0 0 30px rgba(255,255,255,0.5);
+            animation: cardIn 1.2s ease;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .small-title {
+            color: #9b4774;
+            font-size: 15px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #c62d73;
+            font-size: 32px;
+            text-shadow: 0 3px 10px #ffffff;
+        }
+
+        .subtitle {
+            color: #70465e;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Daddy */
+        .daddy {
+            margin: 25px auto 10px;
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fff, #ffe3ef);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 88px;
+            cursor: pointer;
+            box-shadow:
+                0 12px 30px rgba(180,80,130,0.25),
+                0 0 0 8px #ffffff66;
+            animation: daddyBounce 2.2s ease-in-out infinite;
+            transition: 0.3s;
+        }
+
+        .daddy:hover {
+            transform: scale(1.12) rotate(3deg);
+        }
+
+        @keyframes daddyBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .click {
+            color: #9b5275;
+            font-size: 14px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.45;
+            }
+        }
+
+        /* Message */
+        #message {
+            display: none;
+            animation: messageIn 1s ease;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .message-box {
+            margin-top: 20px;
             padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            min-width: 170px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border-radius: 22px;
+            background: #fff7fb;
+            border: 1px solid #ffd1e4;
+            color: #5f4055;
+            font-size: 16px;
+            line-height: 1.8;
+            box-shadow: inset 0 0 20px #ffddec;
         }
 
-        .arrow {
-            font-size: 28px;
-            color: #0b8f50;
-        }
-
-        footer {
-            background: #0b5d3b;
+        /* Next button */
+        .next {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 13px 32px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #d63384, #a94dce);
             color: white;
-            text-align: center;
-            padding: 25px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px #c85b9470;
+            transition: 0.3s;
         }
 
-        @media (max-width: 850px) {
-            .hero {
-                flex-direction: column;
-                text-align: center;
+        .next:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 25px #c85b9490;
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            animation: sparkle 2s infinite;
+        }
+
+        .s1 { top: 10%; left: 15%; }
+        .s2 { top: 18%; right: 12%; animation-delay: 0.6s; }
+        .s3 { bottom: 15%; left: 12%; animation-delay: 1s; }
+        .s4 { bottom: 20%; right: 15%; animation-delay: 1.4s; }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(0.6);
             }
 
-            .hero h1 {
-                font-size: 42px;
-            }
-
-            .roads,
-            .cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            nav {
-                display: none;
+            50% {
+                opacity: 1;
+                transform: scale(1.4) rotate(20deg);
             }
         }
 
-        @media (max-width: 550px) {
-            .roads,
-            .cards {
-                grid-template-columns: 1fr;
+        /* Mobile */
+        @media(max-width:400px) {
+            .card {
+                width: 320px;
+                padding: 28px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .daddy {
+                width: 125px;
+                height: 125px;
+                font-size: 75px;
             }
         }
     </style>
@@ -287,364 +245,91 @@
 
 <body>
 
-<header>
-    <div class="logo">🌱 GreenWave</div>
+    <!-- Floating hearts -->
+    <div class="heart h1">❤️</div>
+    <div class="heart h2">💗</div>
+    <div class="heart h3">💕</div>
+    <div class="heart h4">💖</div>
+    <div class="heart h5">💞</div>
 
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#dashboard">Live Traffic</a>
-        <a href="#how">How It Works</a>
-        <a href="#benefits">Benefits</a>
-    </nav>
-</header>
+    <!-- Sparkles -->
+    <div class="sparkle s1">✦</div>
+    <div class="sparkle s2">✧</div>
+    <div class="sparkle s3">✦</div>
+    <div class="sparkle s4">✧</div>
 
+    <div class="card">
 
-<!-- HERO SECTION -->
-<section class="hero" id="home">
+        <!-- First screen -->
+        <div id="first">
 
-    <div class="hero-text">
-
-        <h1>GreenWave</h1>
-
-        <h2>Traffic Lights That Think Green 🚦</h2>
-
-        <p>
-            GreenWave is a smart traffic management system that
-            detects traffic density and automatically adjusts
-            traffic signal timing.
-        </p>
-
-        <p>
-            By giving more green time to roads with higher traffic,
-            GreenWave helps reduce unnecessary waiting, fuel
-            wastage and vehicle emissions.
-        </p>
-
-        <a href="#dashboard" class="button">
-            View Live Traffic
-        </a>
-
-    </div>
-
-
-    <div class="traffic-icon">
-
-        <div class="light red"></div>
-        <div class="light yellow"></div>
-        <div class="light green"></div>
-
-    </div>
-
-</section>
-
-
-<!-- LIVE DASHBOARD -->
-<section id="dashboard">
-
-    <h2 class="section-title">
-        🚦 Smart Traffic Dashboard
-    </h2>
-
-    <div class="dashboard">
-
-        <div class="roads">
-
-            <div class="road">
-                <h3>North Road</h3>
-                <div class="vehicle-count" id="north">8</div>
-                <p>Vehicles</p>
-                <div class="status" id="northStatus">
-                    Waiting
-                </div>
+            <div class="small-title">
+                A little surprise
             </div>
 
+            <h1>For My Daddy ❤️</h1>
 
-            <div class="road">
-                <h3>East Road</h3>
-                <div class="vehicle-count" id="east">3</div>
-                <p>Vehicles</p>
-                <div class="status" id="eastStatus">
-                    Waiting
-                </div>
-            </div>
-
-
-            <div class="road">
-                <h3>South Road</h3>
-                <div class="vehicle-count" id="south">5</div>
-                <p>Vehicles</p>
-                <div class="status" id="southStatus">
-                    Waiting
-                </div>
-            </div>
-
-
-            <div class="road">
-                <h3>West Road</h3>
-                <div class="vehicle-count" id="west">2</div>
-                <p>Vehicles</p>
-                <div class="status" id="westStatus">
-                    Waiting
-                </div>
-            </div>
-
-        </div>
-
-
-        <div class="timer">
-
-            <p>Current Green Signal</p>
-
-            <div id="activeRoad">
-                North Road
-            </div>
-
-            <div class="timer-number" id="timer">
-                30
-            </div>
-
-            <p>seconds remaining</p>
-
-        </div>
-
-
-        <div class="decision" id="decision">
-
-            🌱 <b>Smart Decision:</b>
-            North Road has the highest traffic density.
-            Green time is automatically extended.
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- BENEFITS -->
-<section id="benefits">
-
-    <h2 class="section-title">
-        🌍 Why GreenWave?
-    </h2>
-
-    <div class="cards">
-
-        <div class="card">
-            <div class="icon">⛽</div>
-            <h3>Less Fuel Waste</h3>
-            <p>
-                Reduces unnecessary vehicle waiting and idling.
+            <p class="subtitle">
+                Someone very special is waiting here... 🥹
             </p>
+
+            <div class="daddy" onclick="showMessage()">
+                👨🏻
+            </div>
+
+            <p class="click">
+                Tap Daddy ❤️
+            </p>
+
         </div>
 
 
-        <div class="card">
-            <div class="icon">💨</div>
-            <h3>Lower Emissions</h3>
-            <p>
-                Helps reduce unnecessary exhaust emissions.
-            </p>
-        </div>
+        <!-- Message screen -->
+        <div id="message">
 
+            <div style="font-size:45px;">
+                🥹❤️
+            </div>
 
-        <div class="card">
-            <div class="icon">🚗</div>
-            <h3>Less Waiting</h3>
-            <p>
-                Traffic timing responds to vehicle density.
-            </p>
-        </div>
+            <h1>Hi Pa ❤️</h1>
 
+            <div class="message-box">
 
-        <div class="card">
-            <div class="icon">🌱</div>
-            <h3>Greener Cities</h3>
-            <p>
-                Supports smarter and more sustainable transport.
-            </p>
+                Appa, romba thanks pa! ❤️
+
+                <br><br>
+
+                En life avlo thaan-nu nenacha
+                nerathulayum, nee en kooda
+                irukka varaikum naan life-la
+                thothu poga maaten pa. 🥹
+
+                <br><br>
+
+                En kooda eppayume iru, Appa!!! 🫂❤️
+
+            </div>
+
+            <a href="page2.html" class="next">
+                Next ✨
+            </a>
+
         </div>
 
     </div>
 
-</section>
 
+    <script>
 
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
+        function showMessage() {
 
-    <h2 class="section-title">
-        ⚙️ How GreenWave Works
-    </h2>
+            document.getElementById("first").style.display = "none";
 
-    <div class="steps">
+            document.getElementById("message").style.display = "block";
 
-        <div class="step">
-            <h3>🚗</h3>
-            <p>Vehicles arrive</p>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="step">
-            <h3>📡</h3>
-            <p>IR Sensors detect traffic</p>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="step">
-            <h3>🧠</h3>
-            <p>Arduino analyses density</p>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="step">
-            <h3>🚦</h3>
-            <p>Signal timing changes</p>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="step">
-            <h3>🌱</h3>
-            <p>Fuel & idle time reduced</p>
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ABOUT PROJECT -->
-<section>
-
-    <h2 class="section-title">
-        📌 About the Project
-    </h2>
-
-    <div class="dashboard">
-
-        <p style="line-height:1.8; text-align:center;">
-
-            GreenWave is an Arduino-based smart traffic signal
-            concept. Four IR sensors represent four roads and
-            detect the presence of vehicles. The Arduino compares
-            the traffic density and provides longer green time to
-            the road with greater traffic demand.
-
-        </p>
-
-    </div>
-
-</section>
-
-
-<footer>
-
-    <p>
-        🌱 GreenWave | Traffic Lights That Think Green
-    </p>
-
-    <p style="margin-top:8px;">
-        Smart Traffic • Sustainable Transportation • Arduino
-    </p>
-
-</footer>
-
-
-<script>
-
-    // Initial vehicle counts
-    let traffic = {
-        north: 8,
-        east: 3,
-        south: 5,
-        west: 2
-    };
-
-
-    let timeLeft = 30;
-
-
-    function updateTraffic() {
-
-        // Simulate sensor readings
-        traffic.north = Math.floor(Math.random() * 10) + 1;
-        traffic.east = Math.floor(Math.random() * 10) + 1;
-        traffic.south = Math.floor(Math.random() * 10) + 1;
-        traffic.west = Math.floor(Math.random() * 10) + 1;
-
-
-        document.getElementById("north").innerText = traffic.north;
-        document.getElementById("east").innerText = traffic.east;
-        document.getElementById("south").innerText = traffic.south;
-        document.getElementById("west").innerText = traffic.west;
-
-
-        // Find road with highest traffic
-        let roads = [
-            {name: "North Road", count: traffic.north},
-            {name: "East Road", count: traffic.east},
-            {name: "South Road", count: traffic.south},
-            {name: "West Road", count: traffic.west}
-        ];
-
-
-        roads.sort((a, b) => b.count - a.count);
-
-
-        let highestRoad = roads[0];
-
-
-        document.getElementById("activeRoad").innerText =
-            highestRoad.name;
-
-
-        document.getElementById("decision").innerHTML =
-            "🌱 <b>Smart Decision:</b> " +
-            highestRoad.name +
-            " has the highest traffic density (" +
-            highestRoad.count +
-            " vehicles). Green time is adjusted automatically.";
-
-
-        // Change timer based on traffic density
-        if (highestRoad.count >= 8) {
-            timeLeft = 45;
-        }
-        else if (highestRoad.count >= 5) {
-            timeLeft = 35;
-        }
-        else {
-            timeLeft = 25;
         }
 
-    }
-
-
-    function countdown() {
-
-        if (timeLeft > 0) {
-            timeLeft--;
-        }
-        else {
-            updateTraffic();
-        }
-
-        document.getElementById("timer").innerText =
-            timeLeft;
-    }
-
-
-    // Update traffic every 10 seconds
-    setInterval(updateTraffic, 10000);
-
-    // Countdown every second
-    setInterval(countdown, 1000);
-
-</script>
+    </script>
 
 </body>
 </html>

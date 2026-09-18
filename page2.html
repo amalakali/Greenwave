@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A Message for Me ❤️</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                radial-gradient(circle at 15% 20%, #ffffffaa 0 3px, transparent 4px),
+                radial-gradient(circle at 85% 25%, #ffffff99 0 4px, transparent 5px),
+                linear-gradient(135deg, #ffb6d5, #d8c2ff, #bde7ff);
+
+            background-size: 130px 130px, 170px 170px, 100% 100%;
+        }
+
+        /* Floating hearts */
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 25px;
+            opacity: 0.7;
+            animation: floatUp 8s linear infinite;
+        }
+
+        .h1 {
+            left: 8%;
+            animation-delay: 0s;
+        }
+
+        .h2 {
+            left: 25%;
+            animation-delay: 2s;
+        }
+
+        .h3 {
+            left: 55%;
+            animation-delay: 4s;
+        }
+
+        .h4 {
+            left: 78%;
+            animation-delay: 1s;
+        }
+
+        .h5 {
+            left: 92%;
+            animation-delay: 5s;
+        }
+
+        @keyframes floatUp {
+
+            0% {
+                bottom: -50px;
+                transform: rotate(0deg) scale(0.8);
+            }
+
+            50% {
+                transform: rotate(15deg) scale(1.15);
+            }
+
+            100% {
+                bottom: 110%;
+                transform: rotate(-15deg) scale(0.9);
+            }
+        }
+
+        /* Main Card */
+
+        .card {
+            width: 350px;
+            max-width: 90%;
+            padding: 30px 25px;
+
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(14px);
+
+            border-radius: 35px;
+            border: 2px solid rgba(255,255,255,0.9);
+
+            box-shadow:
+                0 20px 50px rgba(100,50,100,0.25),
+                0 0 35px rgba(255,255,255,0.5);
+
+            text-align: center;
+
+            animation: cardIn 1s ease;
+        }
+
+        @keyframes cardIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Top icon */
+
+        .icon {
+            width: 85px;
+            height: 85px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: linear-gradient(145deg, #fff, #ffe1ee);
+
+            font-size: 45px;
+
+            box-shadow:
+                0 10px 25px rgba(190,80,130,0.25),
+                0 0 0 7px #ffffff66;
+
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        h1 {
+            margin: 5px 0;
+
+            color: #c62d73;
+
+            font-size: 28px;
+
+            text-shadow: 0 3px 10px white;
+
+            animation: fadeDown 1s ease;
+        }
+
+        @keyframes fadeDown {
+
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            color: #70465e;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Textarea */
+
+        textarea {
+            width: 100%;
+            height: 145px;
+
+            padding: 15px;
+
+            border-radius: 20px;
+
+            border: 2px solid #f2b6d2;
+
+            background: #fffafd;
+
+            color: #5f4055;
+
+            font-size: 16px;
+
+            font-family: Arial, sans-serif;
+
+            resize: none;
+
+            outline: none;
+
+            box-shadow:
+                inset 0 0 15px rgba(255,180,210,0.18),
+                0 5px 15px rgba(180,90,130,0.08);
+
+            transition: 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #d63384;
+
+            box-shadow:
+                0 0 0 4px rgba(214,51,132,0.12),
+                0 8px 20px rgba(180,90,130,0.15);
+        }
+
+        textarea::placeholder {
+            color: #b58ca1;
+        }
+
+        /* Send Button */
+
+        button {
+            margin-top: 18px;
+
+            padding: 13px 35px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: linear-gradient(
+                135deg,
+                #d63384,
+                #a94dce
+            );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px rgba(200,90,150,0.35);
+
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-4px) scale(1.05);
+
+            box-shadow:
+                0 12px 28px rgba(200,90,150,0.45);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Small bottom text */
+
+        .bottom {
+            margin-top: 18px;
+
+            color: #9b6a82;
+
+            font-size: 13px;
+        }
+
+        /* Sparkles */
+
+        .sparkle {
+            position: absolute;
+
+            color: white;
+
+            font-size: 22px;
+
+            animation: sparkle 2s infinite;
+        }
+
+        .s1 {
+            top: 10%;
+            left: 13%;
+        }
+
+        .s2 {
+            top: 18%;
+            right: 13%;
+            animation-delay: 0.5s;
+        }
+
+        .s3 {
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 1s;
+        }
+
+        .s4 {
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes sparkle {
+
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(0.6) rotate(0deg);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.4) rotate(20deg);
+            }
+        }
+
+        /* Mobile */
+
+        @media(max-width:400px) {
+
+            .card {
+                width: 320px;
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            textarea {
+                height: 130px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Floating Hearts -->
+
+    <div class="heart h1">❤️</div>
+    <div class="heart h2">💗</div>
+    <div class="heart h3">💕</div>
+    <div class="heart h4">💖</div>
+    <div class="heart h5">💞</div>
+
+
+    <!-- Sparkles -->
+
+    <div class="sparkle s1">✦</div>
+    <div class="sparkle s2">✧</div>
+    <div class="sparkle s3">✦</div>
+    <div class="sparkle s4">✧</div>
+
+
+    <!-- Main Card -->
+
+    <div class="card">
+
+        <div class="icon">
+            💌
+        </div>
+
+        <h1>
+            Write Something for Me, Pa ❤️
+        </h1>
+
+        <p class="subtitle">
+            You can write anything you want to tell me... 🥹
+            <br>
+            I'll always treasure your words. 🫂
+        </p>
+
+
+        <!-- Formspree Form -->
+
+        <form
+            action="https://formspree.io/f/mljddaoy"
+            method="POST"
+        >
+
+            <textarea
+                name="message"
+                placeholder="Type your message here... 💕"
+                required>
+            </textarea>
+
+            <button type="submit">
+                Send ❤️
+            </button>
+
+        </form>
+
+
+        <div class="bottom">
+            Made with lots of love ❤️✨
+        </div>
+
+    </div>
+
+</body>
+</html>
