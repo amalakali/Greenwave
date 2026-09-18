@@ -25,8 +25,6 @@
             background-size: 130px 130px, 170px 170px, 100% 100%;
         }
 
-        /* Floating hearts */
-
         .heart {
             position: absolute;
             bottom: -50px;
@@ -61,7 +59,6 @@
         }
 
         @keyframes floatUp {
-
             0% {
                 bottom: -50px;
                 transform: rotate(0deg) scale(0.8);
@@ -76,8 +73,6 @@
                 transform: rotate(-15deg) scale(0.9);
             }
         }
-
-        /* Main Card */
 
         .card {
             width: 350px;
@@ -100,7 +95,6 @@
         }
 
         @keyframes cardIn {
-
             from {
                 opacity: 0;
                 transform: translateY(50px) scale(0.8);
@@ -111,8 +105,6 @@
                 transform: translateY(0) scale(1);
             }
         }
-
-        /* Top icon */
 
         .icon {
             width: 85px;
@@ -138,7 +130,6 @@
         }
 
         @keyframes heartbeat {
-
             0%, 100% {
                 transform: scale(1);
             }
@@ -161,7 +152,6 @@
         }
 
         @keyframes fadeDown {
-
             from {
                 opacity: 0;
                 transform: translateY(-15px);
@@ -179,8 +169,6 @@
             line-height: 1.6;
             margin-bottom: 20px;
         }
-
-        /* Textarea */
 
         textarea {
             width: 100%;
@@ -223,8 +211,6 @@
             color: #b58ca1;
         }
 
-        /* Send Button */
-
         button {
             margin-top: 18px;
 
@@ -265,8 +251,6 @@
             transform: scale(0.95);
         }
 
-        /* Small bottom text */
-
         .bottom {
             margin-top: 18px;
 
@@ -274,8 +258,6 @@
 
             font-size: 13px;
         }
-
-        /* Sparkles */
 
         .sparkle {
             position: absolute;
@@ -311,7 +293,6 @@
         }
 
         @keyframes sparkle {
-
             0%, 100% {
                 opacity: 0.2;
                 transform: scale(0.6) rotate(0deg);
@@ -323,10 +304,7 @@
             }
         }
 
-        /* Mobile */
-
         @media(max-width:400px) {
-
             .card {
                 width: 320px;
                 padding: 25px 20px;
@@ -340,13 +318,10 @@
                 height: 130px;
             }
         }
-
     </style>
 </head>
 
 <body>
-
-    <!-- Floating Hearts -->
 
     <div class="heart h1">❤️</div>
     <div class="heart h2">💗</div>
@@ -354,16 +329,10 @@
     <div class="heart h4">💖</div>
     <div class="heart h5">💞</div>
 
-
-    <!-- Sparkles -->
-
     <div class="sparkle s1">✦</div>
     <div class="sparkle s2">✧</div>
     <div class="sparkle s3">✦</div>
     <div class="sparkle s4">✧</div>
-
-
-    <!-- Main Card -->
 
     <div class="card">
 
@@ -381,21 +350,18 @@
             I'll always treasure your words. 🫂
         </p>
 
-
-        <!-- Formspree Form -->
-
         <form
             action="https://formspree.io/f/mljddaoy"
             method="POST"
-        onsubmit="setTimeout(function()
-{window.location.href="page3.html';
-}, 1000);">
+            onsubmit="setTimeout(function() {
+                window.location.href = 'page3.html';
+            }, 1000);"
+        >
 
             <textarea
                 name="message"
                 placeholder="Type your message here... 💕"
-                required>
-            </textarea>
+                required></textarea>
 
             <button type="submit">
                 Send ❤️
@@ -403,12 +369,11 @@
 
         </form>
 
-
         <div class="bottom">
             Made with lots of love ❤️✨
         </div>
 
     </div>
-  <a href="page3.html">Next</a>
+
 </body>
 </html>
