@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenWave | Smart Traffic</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --green:#39ff88;
+    --dark:#020907;
+    --card:#092019;
+    --text:#ffffff;
+    --muted:#91aaa1;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:var(--dark);
+    color:var(--text);
+    overflow:hidden;
+}
+
+/* ================= SCREEN SYSTEM ================= */
+
+.screen{
+    position:absolute;
+    inset:0;
+    min-height:100vh;
+    padding:90px 7% 100px;
+
+    display:none;
+    opacity:0;
+    transform:translateX(60px);
+
+    transition:
+        opacity .5s ease,
+        transform .5s ease;
+
+    overflow-y:auto;
+}
+
+.screen.active{
+    display:block;
+    opacity:1;
+    transform:translateX(0);
+}
+
+/* ================= NAVBAR ================= */
+
+.nav{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:65px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 5%;
+
+    background:rgba(2,12,9,.88);
+    backdrop-filter:blur(12px);
+
+    border-bottom:1px solid rgba(57,255,136,.25);
+
+    z-index:1000;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:var(--green);
+}
+
+.counter{
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* ================= COMMON ================= */
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.center{
+    min-height:75vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.title h2{
+    font-size:44px;
+    margin-bottom:10px;
+}
+
+.title h2 span{
+    color:var(--green);
+}
+
+.title p{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 18px;
+    border:1px solid rgba(57,255,136,.4);
+    border-radius:30px;
+    color:var(--green);
+    margin-bottom:20px;
+}
+
+button{
+    border:1px solid var(--green);
+    background:#062117;
+    color:var(--green);
+
+    padding:13px 25px;
+    border-radius:30px;
+
+    font-weight:bold;
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+button:hover{
+    background:var(--green);
+    color:#001108;
+
+    box-shadow:0 0 25px rgba(57,255,136,.5);
+}
+
+.next{
+    background:var(--green);
+    color:#001108;
+}
+
+.controls{
+    position:fixed;
+    bottom:25px;
+    left:0;
+    width:100%;
+
+    display:flex;
+    justify-content:center;
+    gap:15px;
+
+    z-index:1000;
+}
+
+.card{
+    background:rgba(9,32,25,.85);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:25px;
+
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+/* ================= SCREEN 1 ================= */
+
+#screen1{
+    background:
+    radial-gradient(circle at center,rgba(57,255,136,.15),transparent 35%),
+    linear-gradient(#020d09,#020907);
+}
+
+.hero{
+    max-width:850px;
+}
+
+.hero h1{
+    font-size:clamp(65px,10vw,110px);
+    line-height:.9;
+    margin-bottom:20px;
+}
+
+.hero h1 span{
+    color:var(--green);
+}
+
+.hero h3{
+    font-size:25px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    max-width:650px;
+    margin:auto;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:17px;
+}
+
+
+/* ================= SCREEN 2 ================= */
+.traffic-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);
+    gap:24px;
+    align-items:stretch;
+}
+.intersection{
+    min-height:480px;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(135deg,#0c211b,#102a23);
+    border:1px solid rgba(57,255,136,.3);
+    border-radius:25px;
+}
+.road-v{
+    position:absolute; left:50%; top:0; transform:translateX(-50%);
+    width:190px; height:100%; background:#303735;
+}
+.road-h{
+    position:absolute; top:50%; left:0; transform:translateY(-50%);
+    width:100%; height:170px; background:#303735;
+}
+.road-v:before,.road-h:before{
+    content:""; position:absolute; opacity:.55;
+}
+.road-v:before{
+    left:50%; top:0; height:100%; border-left:3px dashed #d8dfdc;
+}
+.road-h:before{
+    top:50%; left:0; width:100%; border-top:3px dashed #d8dfdc;
+}
+.intersection-label{
+    position:absolute; z-index:3; padding:7px 12px; border-radius:12px;
+    background:#061811; border:1px solid rgba(57,255,136,.35);
+    color:#fff; font-size:13px; font-weight:bold;
+}
+.label-north{top:14px;left:50%;transform:translateX(-50%)}
+.label-south{bottom:14px;left:50%;transform:translateX(-50%)}
+.label-east{right:12px;top:50%;transform:translateY(-50%)}
+.label-west{left:12px;top:50%;transform:translateY(-50%)}
+.queue{
+    position:absolute; z-index:2; display:flex; gap:7px; align-items:center;
+}
+.queue span{
+    display:block; width:25px; height:42px; border-radius:7px;
+    background:#39a9ff; border:2px solid #b9eaff;
+    box-shadow:0 0 10px rgba(57,169,255,.35);
+}
+.queue-north{top:70px;left:calc(50% - 72px);flex-direction:column}
+.queue-south{bottom:70px;left:calc(50% + 45px);flex-direction:column}
+.queue-west{left:75px;top:calc(50% - 68px)}
+.queue-east{right:75px;top:calc(50% + 28px)}
+.queue.priority span{background:#ffbd4a;border-color:#ffe0a1;box-shadow:0 0 12px rgba(255,189,74,.55)}
+.signal-box{
+    position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);
+    display:flex;align-items:center;gap:9px;padding:9px 13px;
+    background:#07110e;border:1px solid rgba(57,255,136,.5);border-radius:14px;
+}
+.signal-lamp{width:14px;height:14px;border-radius:50%;background:#39ff88;box-shadow:0 0 12px #39ff88}
+.road-stats{display:grid;gap:10px;margin-top:16px}
+.road-stat{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 14px;background:#061811;border:1px solid rgba(255,255,255,.07);border-radius:12px;
+}
+.road-stat.active-road{border:1px solid #ffbd4a;background:rgba(255,189,74,.12)}
+.road-stat strong{font-size:19px;color:var(--green)}
+.road-stat.active-road strong{color:#ffcf75}
+.stat-name{display:flex;align-items:center;gap:9px}
+.stat-dot{width:9px;height:9px;border-radius:50%;background:#39a9ff}
+.active-road .stat-dot{background:#ffbd4a}
+.decision-callout{
+    margin-top:16px;padding:16px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(57,255,136,.12),rgba(57,255,136,.03));
+    border:1px solid rgba(57,255,136,.3);
+}
+.decision-callout h3{margin-bottom:8px}
+.decision-callout p{color:#d7e5df;line-height:1.5}
+.decision-time{display:inline-block;margin-top:10px;color:var(--green);font-weight:bold}
+@media(max-width:800px){
+    .traffic-layout{grid-template-columns:1fr}
+    .intersection{min-height:390px}
+}
+
+/* ================= SCREEN 3 ================= */
+
+.sensor{
+    height:300px;
+
+    background:
+    linear-gradient(90deg,#06120e,#12382b,#06120e);
+
+    border-radius:25px;
+    border:1px solid rgba(57,255,136,.3);
+
+    position:relative;
+    overflow:hidden;
+}
+
+.wave{
+    position:absolute;
+
+    left:50%;
+    top:100px;
+
+    width:200px;
+    height:90px;
+
+    transform:translateX(-50%);
+
+    border:2px solid var(--green);
+    border-radius:50%;
+
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    50%{
+        transform:translateX(-50%) scale(1.2);
+        opacity:.4;
+    }
+}
+
+.sensor-car{
+    position:absolute;
+    left:48%;
+    top:115px;
+    font-size:45px;
+}
+
+/* ================= SCREEN 4 ================= */
+
+.gw4-dashboard{
+    display:grid;
+    grid-template-columns:1fr 1.1fr 1fr;
+    gap:20px;
+    max-width:1100px;
+    margin:30px auto;
+    align-items:stretch;
+}
+
+.gw4-panel{
+    background:linear-gradient(145deg,#0b241b,#06130f);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 0 25px rgba(57,255,136,.08);
+}
+
+.gw4-panel h3{
+    margin-top:0;
+    color:var(--green);
+}
+
+.gw4-sub{
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+/* ROAD CARDS */
+
+.gw4-road{
+    background:#071812;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:15px;
+    margin-bottom:12px;
+}
+
+.gw4-road.priority{
+    border:1px solid var(--green);
+    box-shadow:0 0 15px rgba(57,255,136,.15);
+}
+
+.gw4-road-name{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.gw4-count{
+    font-size:25px;
+    font-weight:bold;
+    color:white;
+}
+
+.gw4-density{
+    font-size:12px;
+    color:var(--green);
+}
+
+.gw4-density.medium{
+    color:#ffd166;
+}
+
+.gw4-density.low{
+    color:#7dd3fc;
+}
+
+/* DECISION ENGINE */
+
+.gw4-engine{
+    min-height:300px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:
+        radial-gradient(circle at center,
+        rgba(57,255,136,.15),
+        transparent 60%),
+        #06130f;
+}
+
+.gw4-engine-icon{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
+    border:2px solid var(--green);
+    box-shadow:
+        0 0 20px rgba(57,255,136,.35),
+        inset 0 0 20px rgba(57,255,136,.12);
+    animation:gw4Pulse 2s infinite;
+}
+
+@keyframes gw4Pulse{
+    0%,100%{
+        transform:scale(1);
+        box-shadow:0 0 20px rgba(57,255,136,.3);
+    }
+
+    50%{
+        transform:scale(1.08);
+        box-shadow:0 0 40px rgba(57,255,136,.6);
+    }
+}
+
+.gw4-scan{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:20px;
+}
+
+.gw4-arrow{
+    color:var(--green);
+    font-size:28px;
+    margin:10px;
+}
+
+/* DECISION RESULT */
+
+.gw4-decision{
+    background:linear-gradient(
+        145deg,
+        rgba(57,255,136,.16),
+        rgba(57,255,136,.04)
+    );
+    border:1px solid rgba(57,255,136,.4);
+}
+
+.gw4-decision-label{
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--muted);
+}
+
+.gw4-selected{
+    font-size:32px;
+    font-weight:bold;
+    color:var(--green);
+    margin:15px 0;
+}
+
+.gw4-action{
+    font-size:16px;
+    line-height:1.6;
+}
+
+.gw4-time{
+    font-size:40px;
+    font-weight:bold;
+    margin:20px 0 5px;
+}
+
+.gw4-status{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--green);
+    font-size:13px;
+}
+
+.gw4-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 10px var(--green);
+}
+
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+    .gw4-dashboard{
+        grid-template-columns:1fr;
+        margin:20px;
+    }
+
+}
+/* ================= SCREEN 5 ================= */
+
+.gw5-flow{
+    max-width:1050px;
+    margin:30px auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.gw5-card{
+    background:linear-gradient(145deg,#0b241b,#06130f);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 0 25px rgba(57,255,136,.08);
+}
+
+.gw5-card h3{
+    margin:0 0 8px;
+    font-size:24px;
+}
+
+.gw5-subtitle{
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.gw5-step{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#071812;
+    border-radius:14px;
+    padding:15px;
+    margin:12px 0;
+    border:1px solid rgba(255,255,255,.07);
+}
+
+.gw5-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(57,255,136,.08);
+    font-size:22px;
+    flex-shrink:0;
+}
+
+.gw5-step strong{
+    display:block;
+    margin-bottom:4px;
+}
+
+.gw5-step span{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.gw5-arrow{
+    text-align:center;
+    color:var(--green);
+    font-size:22px;
+}
+
+.gw5-timing{
+    text-align:center;
+    margin-top:20px;
+    padding:20px;
+    border-radius:16px;
+    background:rgba(57,255,136,.08);
+    border:1px solid rgba(57,255,136,.3);
+}
+
+.gw5-time{
+    font-size:48px;
+    font-weight:bold;
+    color:var(--green);
+}
+
+.gw5-result{
+    margin-top:10px;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.gw5-highlight{
+    color:var(--green);
+    font-weight:bold;
+}
+
+.gw5-bottom{
+    max-width:700px;
+    margin:25px auto 0;
+    text-align:center;
+}
+
+@media(max-width:800px){
+
+    .gw5-flow{
+        grid-template-columns:1fr;
+        margin:20px;
+    }
+
+}
+/* ================= SCREEN 6 ================= */
+
+.gw6-dashboard{
+    max-width:1050px;
+    margin:30px auto;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.gw6-card{
+    background:linear-gradient(145deg,#0b241b,#06130f);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 0 25px rgba(57,255,136,.08);
+    position:relative;
+    overflow:hidden;
+}
+
+.gw6-card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:3px;
+    background:var(--green);
+    box-shadow:0 0 15px var(--green);
+}
+
+.gw6-label{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+.gw6-value{
+    font-size:42px;
+    font-weight:bold;
+    color:white;
+}
+
+.gw6-unit{
+    font-size:14px;
+    color:var(--muted);
+}
+
+.gw6-icon{
+    font-size:28px;
+    margin-bottom:12px;
+}
+
+.gw6-signal{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.gw6-light{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 15px var(--green);
+    animation:gw6Blink 1.5s infinite;
+}
+
+@keyframes gw6Blink{
+    0%,100%{opacity:1;}
+    50%{opacity:.35;}
+}
+
+.gw6-live{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 12px;
+    border-radius:20px;
+    background:rgba(57,255,136,.08);
+    color:var(--green);
+    font-size:12px;
+    margin-bottom:20px;
+}
+
+.gw6-live-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 8px var(--green);
+}
+
+.gw6-bottom{
+    max-width:1050px;
+    margin:20px auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(57,255,136,.06);
+    border:1px solid rgba(57,255,136,.2);
+    border-radius:16px;
+    padding:18px 25px;
+}
+
+.gw6-bottom span{
+    color:var(--green);
+    font-weight:bold;
+}
+
+@media(max-width:800px){
+
+    .gw6-dashboard{
+        grid-template-columns:1fr;
+        margin:20px;
+    }
+
+    .gw6-bottom{
+        margin:20px;
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+    }
+
+}
+/* ================= SCREEN 7 ================= */
+
+.gw7-impact{
+    max-width:1000px;
+    margin:35px auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.gw7-card{
+    background:linear-gradient(145deg,#0b241b,#06130f);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:30px 20px;
+    text-align:center;
+}
+
+.gw7-icon{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.gw7-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.gw7-value{
+    font-size:38px;
+    font-weight:bold;
+    color:var(--green);
+}
+
+.gw7-unit{
+    color:var(--muted);
+    font-size:14px;
+    margin-top:5px;
+}
+
+.gw7-explain{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:15px;
+    line-height:1.5;
+}
+
+.gw7-flow{
+    max-width:850px;
+    margin:30px auto 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:15px;
+    color:var(--green);
+    font-size:28px;
+}
+
+.gw7-flow-box{
+    padding:12px 20px;
+    border-radius:12px;
+    background:rgba(57,255,136,.08);
+    border:1px solid rgba(57,255,136,.2);
+    text-align:center;
+}
+
+.gw7-flow-box small{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+}
+
+.gw7-final{
+    max-width:700px;
+    margin:25px auto 0;
+    padding:18px;
+    text-align:center;
+    border-radius:15px;
+    background:rgba(57,255,136,.08);
+    border:1px solid rgba(57,255,136,.25);
+}
+
+.gw7-final strong{
+    color:var(--green);
+}
+
+@media(max-width:800px){
+
+    .gw7-impact{
+        grid-template-columns:1fr;
+        margin:20px;
+    }
+
+    .gw7-flow{
+        flex-direction:column;
+    }
+
+}
+/* ================= SCREEN 8 ================= */
+
+.gw8-process{
+    max-width:1050px;
+    margin:40px auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.gw8-step{
+    position:relative;
+    background:linear-gradient(145deg,#0b241b,#06130f);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:28px 18px;
+    text-align:center;
+}
+
+.gw8-number{
+    width:35px;
+    height:35px;
+    margin:0 auto 15px;
+    border-radius:50%;
+    background:var(--green);
+    color:#02100a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.gw8-icon{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.gw8-step h3{
+    margin:8px 0;
+}
+
+.gw8-step p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+}
+
+.gw8-arrow{
+    position:absolute;
+    right:-18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--green);
+    font-size:25px;
+    z-index:2;
+}
+
+.gw8-result{
+    max-width:700px;
+    margin:30px auto 0;
+    padding:20px;
+    text-align:center;
+    background:rgba(57,255,136,.07);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:16px;
+}
+
+.gw8-result strong{
+    color:var(--green);
+}
+
+@media(max-width:800px){
+
+    .gw8-process{
+        grid-template-columns:1fr;
+        margin:25px 20px;
+    }
+
+    .gw8-arrow{
+        right:auto;
+        top:auto;
+        bottom:-20px;
+        left:50%;
+        transform:translateX(-50%) rotate(90deg);
+    }
+
+}
+/* ================= SCREEN 9 ================= */
+
+.gw9-future{
+    max-width:1000px;
+    margin:40px auto;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.gw9-card{
+    background:linear-gradient(145deg,#0b241b,#06130f);
+    border:1px solid rgba(57,255,136,.25);
+    border-radius:20px;
+    padding:28px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.gw9-icon{
+    width:60px;
+    height:60px;
+    flex-shrink:0;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(57,255,136,.08);
+    font-size:30px;
+}
+
+.gw9-card h3{
+    margin:0 0 8px;
+}
+
+.gw9-card p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+}
+
+.gw9-future-title{
+    text-align:center;
+    margin-top:10px;
+    color:var(--green);
+    font-size:14px;
+    letter-spacing:2px;
+}
+
+@media(max-width:800px){
+
+    .gw9-future{
+        grid-template-columns:1fr;
+        margin:25px 20px;
+    }
+
+}
+
+/* ================= SCREEN 10 ================= */
+
+#screen10{
+    background:
+    radial-gradient(circle at center,rgba(57,255,136,.16),transparent 40%),
+    #020907;
+}
+
+.final h1{
+    font-size:90px;
+}
+
+.final h1 span{
+    color:var(--green);
+}
+
+.final p{
+    color:var(--muted);
+    font-size:18px;
+    margin:20px 0;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:800px){
+
+    .traffic-layout,
+    .compare{
+        grid-template-columns:1fr;
+    }
+
+    .title h2{
+        font-size:32px;
+    }
+
+    .final h1{
+        font-size:60px;
+    }
+
+    .intersection{
+        height:350px;
+    }
+}
+
+/* Screen 2: clearer signal phases and vehicle clearance animation */
+.intersection{background:#183b2b;}
+.intersection:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.14));pointer-events:none;z-index:1}
+.road-v,.road-h{background:#343a3a}
+.road-v:after,.road-h:after{content:"";position:absolute;background:repeating-linear-gradient(transparent 0 22px,#e8e8d8 22px 35px,transparent 35px 57px);opacity:.7}
+.road-v:after{left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%)}
+.road-h:after{top:50%;left:0;right:0;height:3px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,transparent 0 22px,#e8e8d8 22px 35px,transparent 35px 57px)}
+.queue span{position:relative;transition:transform 1.8s ease,opacity 1.8s ease}
+.queue span:before{content:"";position:absolute;left:5px;right:5px;top:6px;height:10px;border-radius:3px;background:rgba(255,255,255,.72)}
+.queue.clearing span{opacity:0;transform:translate(0,-90px) scale(.7)}
+.queue-north.clearing span{transform:translateY(-95px) scale(.7)}
+.queue-south.clearing span{transform:translateY(95px) scale(.7)}
+.queue-west.clearing span{transform:translateX(-95px) scale(.7)}
+.queue-east.clearing span{transform:translateX(95px) scale(.7)}
+.signal-box{min-width:155px;justify-content:center}
+.signal-lamp{flex-shrink:0}
+.signal-lamp.red{background:#ff4b4b;box-shadow:0 0 12px #ff4b4b}
+.signal-lamp.amber{background:#ffc247;box-shadow:0 0 12px #ffc247}
+.signal-lamp.green{background:#39ff88;box-shadow:0 0 12px #39ff88}
+.phase-pill{display:inline-block;font-size:11px;letter-spacing:.08em;padding:5px 9px;border-radius:20px;background:#13251e;color:#b9c9c2;margin-top:10px}
+.progress-track{height:8px;background:#263a32;border-radius:20px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#39ff88,#a5ffca);border-radius:20px;transition:width .25s linear}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- ================= NAV ================= -->
+
+<div class="nav">
+
+    <div class="logo">
+        🌱 Green<span>Wave</span>
+    </div>
+
+    <div class="counter" id="counter">
+        01 / 10
+    </div>
+
+</div>
+
+
+<!-- ================= SCREEN 1 ================= -->
+
+<section class="screen active" id="screen1">
+
+<div class="center">
+
+<div class="hero">
+
+<div class="badge">
+SMART CITY TRAFFIC SYSTEM
+</div>
+
+<h1>
+Green<span>Wave</span>
+</h1>
+
+<h3>
+Traffic Lights That Think Green
+</h3>
+
+<p>
+A smart traffic management concept that adapts
+signal timing according to real-time vehicle density,
+helping reduce unnecessary waiting, fuel wastage
+and emissions.
+</p>
+
+<br>
+
+<button class="next" onclick="nextScreen()">
+START EXPERIENCE →
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= SCREEN 2 ================= -->
+<section class="screen" id="screen2">
+  <div class="container">
+    <div class="title">
+      <h2>Live <span>Traffic Simulation</span></h2>
+      <p>Compare vehicle queues and see which road the demo prioritizes.</p>
+    </div>
+
+    <div class="traffic-layout">
+      <div class="intersection" aria-label="Top-down four-way intersection simulation">
+        <div class="road-v"></div>
+        <div class="road-h"></div>
+        <div class="intersection-label label-north">ROAD 1 · NORTH</div>
+        <div class="intersection-label label-south">ROAD 2 · SOUTH</div>
+        <div class="intersection-label label-west">ROAD 3 · WEST</div>
+        <div class="intersection-label label-east">ROAD 4 · EAST</div>
+        <div class="queue queue-north" id="queue1"></div>
+        <div class="queue queue-south" id="queue2"></div>
+        <div class="queue queue-west" id="queue3"></div>
+        <div class="queue queue-east" id="queue4"></div>
+        <div class="signal-box"><span class="signal-lamp green" id="signalLamp"></span><strong id="signalRoad">ROAD 1 GREEN</strong></div>
+      </div>
+
+      <div class="card">
+        <h3>🚦 Vehicle Count (Demo)</h3>
+        <p style="color:var(--muted);margin-top:6px;font-size:13px">Each blue car represents one simulated vehicle.</p>
+        <div class="road-stats">
+          <div class="road-stat" id="stat1"><span class="stat-name"><i class="stat-dot"></i>Road 1 · North</span><strong id="r1">8</strong></div>
+          <div class="road-stat" id="stat2"><span class="stat-name"><i class="stat-dot"></i>Road 2 · South</span><strong id="r2">2</strong></div>
+          <div class="road-stat" id="stat3"><span class="stat-name"><i class="stat-dot"></i>Road 3 · West</span><strong id="r3">5</strong></div>
+          <div class="road-stat" id="stat4"><span class="stat-name"><i class="stat-dot"></i>Road 4 · East</span><strong id="r4">4</strong></div>
+        </div>
+        <div class="decision-callout">
+          <h3>🧠 GreenWave Decision</h3>
+          <p id="decision">Road 1 has the largest simulated queue, so it is selected for priority.</p>
+          <span class="decision-time" id="greenTime">Green phase: 8 seconds</span><div class="phase-pill" id="phaseText">READY TO CLEAR</div><div class="progress-track"><div class="progress-fill" id="phaseProgress"></div></div>
+        </div>
+        <p style="margin-top:12px;color:var(--muted);font-size:12px">Interactive demo only: counts are simulated. The green phase animates a queue clearing; no real signal is controlled.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN 3 ================= -->
+<section class="screen" id="screen3">
+  <div class="container">
+    <div class="title">
+      <h2>IR Sensor <span>Traffic Dashboard</span></h2>
+      <p>Four-road intersection · illustrative sensor readings and vehicle-density estimates</p>
+    </div>
+    <style>
+      #screen3 .gw3-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:20px;align-items:stretch}
+      #screen3 .gw3-cross{position:relative;min-height:370px;border-radius:18px;background:#15202b;overflow:hidden;border:1px solid #334155}
+      #screen3 .gw3-road-v{position:absolute;left:35%;top:0;width:30%;height:100%;background:#303b49}
+      #screen3 .gw3-road-h{position:absolute;top:35%;left:0;width:100%;height:30%;background:#303b49}
+      #screen3 .gw3-line-v{position:absolute;left:50%;top:0;height:100%;border-left:2px dashed #cbd5e1;opacity:.65}
+      #screen3 .gw3-line-h{position:absolute;top:50%;left:0;width:100%;border-top:2px dashed #cbd5e1;opacity:.65}
+      #screen3 .gw3-center{position:absolute;left:35%;top:35%;width:30%;height:30%;border:2px solid #64748b;border-radius:8px;background:#202c39;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-weight:800;text-align:center;font-size:13px}
+      #screen3 .gw3-sensor{position:absolute;z-index:2;background:#facc15;color:#111827;border:2px solid #fff;border-radius:8px;padding:6px 9px;font-size:12px;font-weight:900;box-shadow:0 0 16px #facc1580}
+      #screen3 .gw3-n{top:24%;left:46%} #screen3 .gw3-s{bottom:24%;left:46%} #screen3 .gw3-w{left:24%;top:46%} #screen3 .gw3-e{right:24%;top:46%}
+      #screen3 .gw3-car{position:absolute;z-index:1;font-size:25px;filter:drop-shadow(0 2px 2px #0008)}
+      #screen3 .gw3-cn{top:9%;left:47%} #screen3 .gw3-cs{bottom:9%;left:47%} #screen3 .gw3-cw{left:8%;top:47%} #screen3 .gw3-ce{right:8%;top:47%}
+      #screen3 .gw3-stat{background:var(--card, #fff);border:1px solid var(--border,#dbe2ea);border-radius:14px;padding:15px;margin-bottom:12px}
+      #screen3 .gw3-stat-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:750}
+      #screen3 .gw3-meter{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:11px 0 7px}
+      #screen3 .gw3-fill{height:100%;width:50%;background:#22c55e;border-radius:99px;transition:width .35s}
+      #screen3 .gw3-muted{font-size:12px;color:var(--muted,#64748b)}
+      #screen3 .gw3-tag{font-size:11px;border-radius:99px;padding:4px 8px;background:#dcfce7;color:#166534;font-weight:800}
+      #screen3 .gw3-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+      #screen3 .gw3-controls button{border:0;border-radius:9px;padding:9px 12px;background:#0f766e;color:white;font-weight:700;cursor:pointer}
+      #screen3 .gw3-controls button.secondary{background:#475569}
+      @media(max-width:760px){#screen3 .gw3-layout{grid-template-columns:1fr}#screen3 .gw3-cross{min-height:320px}}
+    </style>
+    <div class="gw3-layout">
+      <div class="gw3-cross" aria-label="Four-road intersection showing one IR sensor on each approach">
+        <div class="gw3-road-v"></div><div class="gw3-road-h"></div><div class="gw3-line-v"></div><div class="gw3-line-h"></div>
+        <div class="gw3-center">GREENWAVE<br>JUNCTION</div>
+        <div class="gw3-sensor gw3-n">IR 1 · NORTH</div><div class="gw3-sensor gw3-s">IR 2 · SOUTH</div><div class="gw3-sensor gw3-w">IR 3 · WEST</div><div class="gw3-sensor gw3-e">IR 4 · EAST</div>
+        <div class="gw3-car gw3-cn">🚗</div><div class="gw3-car gw3-cs">🚙</div><div class="gw3-car gw3-cw">🚕</div><div class="gw3-car gw3-ce">🚗</div>
+      </div>
+      <div>
+        <div class="gw3-stat"><div class="gw3-stat-head"><span>📡 Sensor status</span><span class="gw3-tag">4 / 4 ACTIVE</span></div><p class="gw3-muted" style="margin:8px 0 0">IR sensors detect vehicle presence on each approach. This screen uses demo values—not live hardware.</p></div>
+        <div class="gw3-stat"><div class="gw3-stat-head"><span>North Road</span><strong><span id="gw3-count-0">8</span> vehicles</strong></div><div class="gw3-meter"><div class="gw3-fill" id="gw3-fill-0" style="width:80%"></div></div><div class="gw3-muted">IR 1 · Density: <b id="gw3-density-0">High</b></div></div>
+        <div class="gw3-stat"><div class="gw3-stat-head"><span>South Road</span><strong><span id="gw3-count-1">2</span> vehicles</strong></div><div class="gw3-meter"><div class="gw3-fill" id="gw3-fill-1" style="width:20%"></div></div><div class="gw3-muted">IR 2 · Density: <b id="gw3-density-1">Low</b></div></div>
+        <div class="gw3-stat"><div class="gw3-stat-head"><span>West Road</span><strong><span id="gw3-count-2">5</span> vehicles</strong></div><div class="gw3-meter"><div class="gw3-fill" id="gw3-fill-2" style="width:50%"></div></div><div class="gw3-muted">IR 3 · Density: <b id="gw3-density-2">Medium</b></div></div>
+        <div class="gw3-stat"><div class="gw3-stat-head"><span>East Road</span><strong><span id="gw3-count-3">4</span> vehicles</strong></div><div class="gw3-meter"><div class="gw3-fill" id="gw3-fill-3" style="width:40%"></div></div><div class="gw3-muted">IR 4 · Density: <b id="gw3-density-3">Medium</b></div></div>
+        <div class="gw3-stat"><div class="gw3-stat-head"><span>🧮 Density analysis</span><span class="gw3-tag" id="gw3-total">19 detected</span></div><p id="gw3-summary" style="margin:8px 0 0;font-weight:700">North Road currently has the highest demo vehicle count.</p><div class="gw3-controls"><button type="button" onclick="gw3Refresh()">Refresh demo readings</button><button type="button" class="secondary" onclick="gw3Reset()">Reset values</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN 4 ================= -->
+
+<section class="screen" id="screen4">
+
+<div class="container">
+
+<div class="title">
+
+<h2>
+Intelligent <span>Decision Making</span>
+</h2>
+
+<p>
+GreenWave analyses traffic and chooses the appropriate signal timing.
+</p>
+
+</div>
+
+
+<div class="gw4-dashboard">
+
+
+<!-- TRAFFIC ANALYSIS -->
+
+<div class="gw4-panel">
+
+<h3>📊 Traffic Analysis</h3>
+
+<div class="gw4-sub">
+Real-time vehicle density
+</div>
+
+
+<div class="gw4-road priority">
+
+<div class="gw4-road-name">
+🚗 Road 1
+<small>North</small>
+</div>
+
+<div>
+<div class="gw4-count">8</div>
+<span class="gw4-density">HIGH</span>
+</div>
+
+</div>
+
+
+<div class="gw4-road">
+
+<div class="gw4-road-name">
+🚙 Road 2
+<small>South</small>
+</div>
+
+<div>
+<div class="gw4-count">2</div>
+<span class="gw4-density low">LOW</span>
+</div>
+
+</div>
+
+
+<div class="gw4-road">
+
+<div class="gw4-road-name">
+🚕 Road 3
+<small>West</small>
+</div>
+
+<div>
+<div class="gw4-count">5</div>
+<span class="gw4-density medium">MEDIUM</span>
+</div>
+
+</div>
+
+
+<div class="gw4-road">
+
+<div class="gw4-road-name">
+🚗 Road 4
+<small>East</small>
+</div>
+
+<div>
+<div class="gw4-count">4</div>
+<span class="gw4-density medium">MEDIUM</span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DECISION ENGINE -->
+
+<div class="gw4-engine">
+
+<div class="gw4-engine-icon">
+🧠
+</div>
+
+<h3>
+GreenWave Decision Engine
+</h3>
+
+<p>
+Analysing traffic density...
+</p>
+
+<div class="gw4-scan">
+● DATA RECEIVED &nbsp; → &nbsp; ANALYSIS COMPLETE
+</div>
+
+<div class="gw4-arrow">
+↓
+</div>
+
+<p>
+Highest traffic detected on
+<strong style="color:#4ade80;">
+Road 1
+</strong>
+</p>
+
+</div>
+
+
+<!-- SMART DECISION -->
+
+<div class="gw4-panel gw4-decision">
+
+<div class="gw4-decision-label">
+⚡ SMART DECISION
+</div>
+
+<div class="gw4-selected">
+ROAD 1
+</div>
+
+<p style="margin:0;color:#475569;font-size:13px;">
+Highest vehicle density detected
+</p>
+
+
+<div class="gw4-action">
+
+<strong>
+🚦 Signal Action
+</strong>
+
+<br>
+
+Extend Road 1 green signal
+to improve traffic flow and
+reduce unnecessary waiting.
+
+</div>
+
+
+<div class="gw4-time">
+
+<span>
+Current Green
+</span>
+
+<strong>
+20 sec
+</strong>
+
+</div>
+
+
+<div class="gw4-time">
+
+<span>
+Adaptive Green
+</span>
+
+<strong>
+40 sec
+</strong>
+
+</div>
+
+
+<div class="gw4-status">
+
+<span class="gw4-dot"></span>
+
+GREENWAVE PRIORITY ACTIVE
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+<!-- ================= SCREEN 5 ================= -->
+<section class="screen" id="screen5">
+
+    <div class="container">
+
+        <div class="title">
+            <h2>Adaptive <span>Signal Timing</span></h2>
+            <p>
+                GreenWave changes signal timing based on the number of vehicles waiting.
+            </p>
+        </div>
+
+
+        <div class="gw5-flow">
+
+            <!-- TRADITIONAL -->
+            <div class="gw5-card">
+
+                <h3>Traditional Timing</h3>
+
+                <div class="gw5-subtitle">
+                    Fixed signal timing
+                </div>
+
+                <div class="gw5-step">
+
+                    <div class="gw5-icon">🚗</div>
+
+                    <div>
+                        <strong>10 Vehicles</strong>
+                        <span>Vehicles waiting on Road 1</span>
+                    </div>
+
+                </div>
+
+                <div class="gw5-arrow">↓</div>
+
+                <div class="gw5-step">
+
+                    <div class="gw5-icon">⏱️</div>
+
+                    <div>
+                        <strong>Fixed Timing</strong>
+                        <span>Signal uses the same preset time</span>
+                    </div>
+
+                </div>
+
+                <div class="gw5-arrow">↓</div>
+
+                <div class="gw5-timing">
+
+                    <div class="gw5-time">
+                        20 SEC
+                    </div>
+
+                    <div class="gw5-result">
+                        Same timing even when traffic increases
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- GREENWAVE -->
+            <div class="gw5-card">
+
+                <h3 class="green">GreenWave Timing</h3>
+
+                <div class="gw5-subtitle">
+                    Traffic-based adaptive timing
+                </div>
+
+                <div class="gw5-step">
+
+                    <div class="gw5-icon">🚗</div>
+
+                    <div>
+                        <strong>10 Vehicles</strong>
+                        <span>GreenWave detects waiting vehicles</span>
+                    </div>
+
+                </div>
+
+                <div class="gw5-arrow">↓</div>
+
+                <div class="gw5-step">
+
+                    <div class="gw5-icon">🧠</div>
+
+                    <div>
+                        <strong>Traffic Analysis</strong>
+                        <span>AI identifies high traffic density</span>
+                    </div>
+
+                </div>
+
+                <div class="gw5-arrow">↓</div>
+
+                <div class="gw5-timing">
+
+                    <div class="gw5-time">
+                        40 SEC
+                    </div>
+
+                    <div class="gw5-result">
+                        <span class="gw5-highlight">
+                            Extra green time
+                        </span>
+                        is given to the busy road
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FINAL RESULT -->
+
+        <div class="card gw5-bottom">
+
+            <h3 class="green">
+                WHY DOES GREENWAVE CHANGE THE TIME?
+            </h3>
+
+            <p>
+                When more vehicles are detected, GreenWave gives
+                the high-traffic road additional green time.
+            </p>
+
+            <p class="green">
+                More green time → Less waiting → Better traffic flow
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ================= SCREEN 6 ================= -->
+
+<section class="screen" id="screen6">
+
+    <div class="container">
+
+        <div class="title">
+
+            <div class="gw6-live">
+                <span class="gw6-live-dot"></span>
+                LIVE MONITORING
+            </div>
+
+            <h2>Real-Time <span>Dashboard</span></h2>
+
+            <p>
+                GreenWave continuously monitors traffic conditions
+                and signal status.
+            </p>
+
+        </div>
+
+
+        <div class="gw6-dashboard">
+
+            <!-- TOTAL VEHICLES -->
+
+            <div class="gw6-card">
+
+                <div class="gw6-icon">
+                    🚗
+                </div>
+
+                <div class="gw6-label">
+                    TOTAL VEHICLES
+                </div>
+
+                <div class="gw6-value">
+                    19
+                </div>
+
+                <div class="gw6-unit">
+                    vehicles detected
+                </div>
+
+            </div>
+
+
+            <!-- WAITING TIME -->
+
+            <div class="gw6-card">
+
+                <div class="gw6-icon">
+                    ⏱️
+                </div>
+
+                <div class="gw6-label">
+                    AVERAGE WAITING TIME
+                </div>
+
+                <div class="gw6-value">
+                    18
+                    <span class="gw6-unit">sec</span>
+                </div>
+
+                <div class="gw6-unit">
+                    current traffic condition
+                </div>
+
+            </div>
+
+
+            <!-- CURRENT SIGNAL -->
+
+            <div class="gw6-card">
+
+                <div class="gw6-icon">
+                    🚦
+                </div>
+
+                <div class="gw6-label">
+                    CURRENT SIGNAL
+                </div>
+
+                <div class="gw6-signal">
+
+                    <div class="gw6-light"></div>
+
+                    <div class="gw6-value">
+                        GREEN
+                    </div>
+
+                </div>
+
+                <div class="gw6-unit">
+                    Road 1
+                </div>
+
+            </div>
+
+
+            <!-- TRAFFIC DENSITY -->
+
+            <div class="gw6-card">
+
+                <div class="gw6-icon">
+                    📊
+                </div>
+
+                <div class="gw6-label">
+                    TRAFFIC DENSITY
+                </div>
+
+                <div class="gw6-value green">
+                    HIGH
+                </div>
+
+                <div class="gw6-unit">
+                    priority detected
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="gw6-bottom">
+
+            <div>
+                AI STATUS:
+                <span>ANALYSING TRAFFIC</span>
+            </div>
+
+            <div>
+                NEXT UPDATE:
+                <span>2 SEC</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= SCREEN 7 ================= -->
+<section class="screen" id="screen7">
+
+    <div class="container">
+
+        <div class="title">
+
+            <h2>Environmental <span>Impact</span></h2>
+
+            <p>
+                Less traffic waiting means less fuel wasted.
+            </p>
+
+        </div>
+
+
+        <!-- SIMPLE EXPLANATION -->
+
+        <div class="gw7-flow">
+
+            <div class="gw7-flow-box">
+                🚗 Traffic
+                <small>Vehicles wait</small>
+            </div>
+
+            <div>→</div>
+
+            <div class="gw7-flow-box">
+                ⏱️ Waiting
+                <small>Less waiting</small>
+            </div>
+
+            <div>→</div>
+
+            <div class="gw7-flow-box">
+                ⛽ Fuel
+                <small>Less fuel used</small>
+            </div>
+
+            <div>→</div>
+
+            <div class="gw7-flow-box">
+                🌱 CO₂
+                <small>Lower emissions</small>
+            </div>
+
+        </div>
+
+
+        <!-- RESULTS -->
+
+        <div class="gw7-impact">
+
+            <div class="gw7-card">
+
+                <div class="gw7-icon">⛽</div>
+
+                <div class="gw7-title">
+                    Fuel Saved
+                </div>
+
+                <div class="gw7-value">
+                    12.4
+                </div>
+
+                <div class="gw7-unit">
+                    Litres
+                </div>
+
+                <div class="gw7-explain">
+                    Less fuel is wasted when
+                    vehicles spend less time waiting.
+                </div>
+
+            </div>
+
+
+            <div class="gw7-card">
+
+                <div class="gw7-icon">⏱️</div>
+
+                <div class="gw7-title">
+                    Idle Time Reduced
+                </div>
+
+                <div class="gw7-value">
+                    46
+                </div>
+
+                <div class="gw7-unit">
+                    Minutes
+                </div>
+
+                <div class="gw7-explain">
+                    Vehicles spend less time
+                    standing at the signal.
+                </div>
+
+            </div>
+
+
+            <div class="gw7-card">
+
+                <div class="gw7-icon">🌱</div>
+
+                <div class="gw7-title">
+                    CO₂ Reduced
+                </div>
+
+                <div class="gw7-value">
+                    28.7
+                </div>
+
+                <div class="gw7-unit">
+                    kg
+                </div>
+
+                <div class="gw7-explain">
+                    Less idling can help reduce
+                    unnecessary emissions.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FINAL MESSAGE -->
+
+        <div class="gw7-final">
+
+            <strong>
+                LESS WAITING → LESS FUEL WASTE → LOWER EMISSIONS
+            </strong>
+
+            <p>
+                GreenWave improves traffic flow while
+                supporting a cleaner and more efficient city.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ================= SCREEN 8 ================= -->
+
+<section class="screen" id="screen8">
+
+    <div class="container">
+
+        <div class="title">
+
+            <h2>How <span>GreenWave</span> Works</h2>
+
+            <p>
+                Four simple steps turn traffic data into smarter signals.
+            </p>
+
+        </div>
+
+
+        <div class="gw8-process">
+
+            <!-- STEP 1 -->
+
+            <div class="gw8-step">
+
+                <div class="gw8-number">1</div>
+
+                <div class="gw8-icon">📷</div>
+
+                <h3>Detect</h3>
+
+                <p>
+                    Sensors detect the number of vehicles
+                    waiting on each road.
+                </p>
+
+                <div class="gw8-arrow">→</div>
+
+            </div>
+
+
+            <!-- STEP 2 -->
+
+            <div class="gw8-step">
+
+                <div class="gw8-number">2</div>
+
+                <div class="gw8-icon">📊</div>
+
+                <h3>Process</h3>
+
+                <p>
+                    The system compares traffic density
+                    between the roads.
+                </p>
+
+                <div class="gw8-arrow">→</div>
+
+            </div>
+
+
+            <!-- STEP 3 -->
+
+            <div class="gw8-step">
+
+                <div class="gw8-number">3</div>
+
+                <div class="gw8-icon">🧠</div>
+
+                <h3>Decide</h3>
+
+                <p>
+                    GreenWave identifies the road that
+                    needs priority.
+                </p>
+
+                <div class="gw8-arrow">→</div>
+
+            </div>
+
+
+            <!-- STEP 4 -->
+
+            <div class="gw8-step">
+
+                <div class="gw8-number">4</div>
+
+                <div class="gw8-icon">🚦</div>
+
+                <h3>Control</h3>
+
+                <p>
+                    The signal timing is adjusted to
+                    improve traffic flow.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="gw8-result">
+
+            <strong>
+                DETECT → ANALYSE → DECIDE → CONTROL
+            </strong>
+
+            <p>
+                This allows GreenWave to respond to traffic
+                conditions instead of using only fixed timings.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= SCREEN 9 ================= -->
+<section class="screen" id="screen9">
+
+    <div class="container">
+
+        <div class="title">
+
+            <div class="gw9-future-title">
+                NEXT GENERATION TRAFFIC MANAGEMENT
+            </div>
+
+            <h2>Future of <span>GreenWave</span></h2>
+
+            <p>
+                GreenWave can grow beyond the current traffic system
+                with smarter connected features.
+            </p>
+
+        </div>
+
+
+        <div class="gw9-future">
+
+            <!-- EMERGENCY -->
+
+            <div class="gw9-card">
+
+                <div class="gw9-icon">
+                    🚑
+                </div>
+
+                <div>
+
+                    <h3>Emergency Priority</h3>
+
+                    <p>
+                        Give priority to emergency vehicles
+                        such as ambulances and fire trucks.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- MOBILE -->
+
+            <div class="gw9-card">
+
+                <div class="gw9-icon">
+                    📱
+                </div>
+
+                <div>
+
+                    <h3>Mobile Monitoring</h3>
+
+                    <p>
+                        Monitor traffic conditions and
+                        signal status from a mobile device.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- CLOUD -->
+
+            <div class="gw9-card">
+
+                <div class="gw9-icon">
+                    ☁️
+                </div>
+
+                <div>
+
+                    <h3>Cloud Integration</h3>
+
+                    <p>
+                        Store and access traffic data
+                        from connected systems.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI -->
+
+            <div class="gw9-card">
+
+                <div class="gw9-icon">
+                    🤖
+                </div>
+
+                <div>
+
+                    <h3>AI Prediction</h3>
+
+                    <p>
+                        Predict future traffic conditions
+                        and prepare signals in advance.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card" style="max-width:700px;margin:25px auto;text-align:center;">
+
+            <h3 class="green">
+                FROM REACTIVE TO PREDICTIVE
+            </h3>
+
+            <p>
+                The future goal is to make traffic signals
+                smarter, connected, and more responsive.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= SCREEN 10 ================= -->
+
+<section class="screen" id="screen10">
+
+<div class="center">
+
+<div class="final">
+
+<div class="badge">
+OUR VISION
+</div>
+
+<h1>
+Green<span>Wave</span>
+</h1>
+
+<h2>
+Smarter Signals.
+Smoother Roads.
+Greener Cities.
+</h2>
+
+<p>
+Technology that makes every signal smarter
+and every journey greener.
+</p>
+
+<button onclick="goToScreen(1)">
+↻ EXPERIENCE AGAIN
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= CONTROLS ================= -->
+
+<div class="controls">
+
+<button onclick="previousScreen()">
+← Back
+</button>
+
+<button class="next" onclick="nextScreen()">
+Next →
+</button>
+
+</div>
+
+
+<script>
+
+let currentScreen = 1;
+
+const totalScreens = 10;
+
+
+/* SHOW SCREEN */
+
+function showScreen(number){
+
+    document
+    .querySelectorAll(".screen")
+    .forEach(screen=>{
+        screen.classList.remove("active");
+    });
+
+    document
+    .getElementById("screen"+number)
+    .classList.add("active");
+
+    currentScreen = number;
+
+    document.getElementById("counter").innerText =
+    String(number).padStart(2,"0")
+    + " / 10";
+
+}
+
+
+/* NEXT */
+
+function nextScreen(){
+
+    if(currentScreen < totalScreens){
+
+        showScreen(currentScreen + 1);
+
+    }
+
+}
+
+
+/* PREVIOUS */
+
+function previousScreen(){
+
+    if(currentScreen > 1){
+
+        showScreen(currentScreen - 1);
+
+    }
+
+}
+
+
+/* DIRECT SCREEN */
+
+function goToScreen(number){
+
+    showScreen(number);
+
+}
+
+
+/* KEYBOARD CONTROL */
+
+document.addEventListener("keydown",function(event){
+
+    if(event.key === "ArrowRight"){
+
+        nextScreen();
+
+    }
+
+    if(event.key === "ArrowLeft"){
+
+        previousScreen();
+
+    }
+
+});
+
+
+/* SCREEN 2 TRAFFIC CLEARANCE DEMO — simulated, not connected to hardware */
+const demoCounts = [8, 2, 5, 4];
+let demoPriority = 0;
+let phaseStarted = Date.now();
+const greenPhaseMs = 8000;
+const clearanceMs = 2400;
+let clearing = false;
+function paintQueues(){
+    demoCounts.forEach((count,index)=>{
+        document.getElementById("r"+(index+1)).innerText=count;
+        const queue=document.getElementById("queue"+(index+1));
+        queue.innerHTML="";
+        for(let i=0;i<count;i++){
+            const car=document.createElement("span");
+            car.setAttribute("aria-hidden","true");
+            queue.appendChild(car);
+        }
+    });
+    document.getElementById("total").innerText=demoCounts.reduce((a,b)=>a+b,0);
+}
+function choosePriority(){
+    demoPriority=demoCounts.indexOf(Math.max(...demoCounts));
+    for(let i=0;i<4;i++){
+        document.getElementById("stat"+(i+1)).classList.toggle("active-road",i===demoPriority);
+        document.getElementById("queue"+(i+1)).classList.toggle("priority",i===demoPriority);
+    }
+    document.getElementById("decision").innerText=`Road ${demoPriority+1} has the longest queue (${demoCounts[demoPriority]} vehicles), so the demo gives it the next green phase.`;
+}
+function setSignal(color,label){
+    const lamp=document.getElementById("signalLamp");
+    lamp.className="signal-lamp "+color;
+    document.getElementById("signalRoad").innerText=label;
+}
+function startGreenPhase(){
+    clearing=false;
+    phaseStarted=Date.now();
+    const queue=document.getElementById("queue"+(demoPriority+1));
+    queue.classList.remove("clearing");
+    setSignal("green",`ROAD ${demoPriority+1} GREEN`);
+    document.getElementById("phaseText").innerText="GREEN — VEHICLES MOVING";
+    document.getElementById("decision").innerText=`Road ${demoPriority+1} is green. Its illustrated queue will move through the junction.`;
+}
+function updateTrafficDemo(){
+    const elapsed=Date.now()-phaseStarted;
+    const progress=Math.min(100,(elapsed/greenPhaseMs)*100);
+    document.getElementById("phaseProgress").style.width=progress+"%";
+    const remaining=Math.max(0,Math.ceil((greenPhaseMs-elapsed)/1000));
+    document.getElementById("greenTime").innerText=`Green phase: ${remaining}s remaining`;
+    if(!clearing && elapsed>=greenPhaseMs*0.58){
+        clearing=true;
+        setSignal("amber",`ROAD ${demoPriority+1} CLEARING`);
+        document.getElementById("phaseText").innerText="CLEARANCE — QUEUE MOVING OUT";
+        document.getElementById("queue"+(demoPriority+1)).classList.add("clearing");
+    }
+    if(elapsed>=greenPhaseMs){
+        // Demo-only cycle: finish clearing the active road before choosing the next one.
+        // The whole displayed queue is cleared, then the next largest remaining queue gets green.
+        demoCounts[demoPriority]=0;
+        paintQueues();
+        if(demoCounts.every(count=>count===0)){
+            // Reset the illustrative traffic scenario so the demo can keep running.
+            demoCounts.splice(0,4,8,2,5,4);
+            paintQueues();
+        }
+        choosePriority();
+        startGreenPhase();
+    }
+}
+paintQueues();
+choosePriority();
+startGreenPhase();
+setInterval(updateTrafficDemo,250);
+
+/* ENVIRONMENT COUNTERS — illustrative demo values */
+let fuel = 12.4;
+let co2 = 28.7;
+let idle = 46;
+setInterval(function(){
+    fuel += 0.1;
+    co2 += 0.2;
+    idle += 0.5;
+    document.getElementById("fuel").innerText = fuel.toFixed(1) + " L";
+    document.getElementById("co2").innerText = co2.toFixed(1) + " kg";
+    document.getElementById("idle").innerText = Math.floor(idle) + " min";
+},3000);
+
+// SCREEN 3 ONLY — simulated IR sensor dashboard values.
+const gw3Base = [8,2,5,4];
+let gw3Counts = [...gw3Base];
+function gw3Density(n){ return n >= 7 ? 'High' : n >= 4 ? 'Medium' : 'Low'; }
+function gw3Render(){
+  let total=0, max=-1, maxIndex=0;
+  gw3Counts.forEach((n,i)=>{
+    total+=n; if(n>max){max=n;maxIndex=i;}
+    document.getElementById('gw3-count-'+i).textContent=n;
+    document.getElementById('gw3-density-'+i).textContent=gw3Density(n);
+    document.getElementById('gw3-fill-'+i).style.width=Math.min(100,n*10)+'%';
+  });
+  document.getElementById('gw3-total').textContent=total+' detected';
+  document.getElementById('gw3-summary').textContent=['North','South','West','East'][maxIndex]+' Road currently has the highest demo vehicle count ('+max+').';
+}
+function gw3Refresh(){ gw3Counts=gw3Counts.map(()=>Math.floor(Math.random()*10)); gw3Render(); }
+function gw3Reset(){ gw3Counts=[...gw3Base]; gw3Render(); }
+gw3Render();
+</script>
+
+</body>
+</html>
